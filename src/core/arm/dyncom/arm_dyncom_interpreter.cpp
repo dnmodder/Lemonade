@@ -2,7 +2,7 @@
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
-#define CITRA_IGNORE_EXIT(x)
+#define LEMONADE_IGNORE_EXIT(x)
 
 #include <algorithm>
 #include <cstdio>
@@ -233,7 +233,7 @@ static unsigned int DPO(RotateRightByRegister)(ARMul_State* cpu, unsigned int sh
 
 #define DEBUG_MSG                                                                                  \
     LOG_DEBUG(Core_ARM11, "inst is {:x}", inst);                                                   \
-    CITRA_IGNORE_EXIT(0)
+    LEMONADE_IGNORE_EXIT(0)
 
 #define LnSWoUB(s) glue(LnSWoUB, s)
 #define MLnS(s) glue(MLnS, s)
@@ -833,7 +833,7 @@ static unsigned int InterpreterTranslateInstruction(const ARMul_State* cpu, cons
                   inst);
         LOG_ERROR(Core_ARM11, "cpsr={:#X}, cpu->TFlag={}, r15={:#010X}", cpu->Cpsr, cpu->TFlag,
                   cpu->Reg[15]);
-        CITRA_IGNORE_EXIT(-1);
+        LEMONADE_IGNORE_EXIT(-1);
     }
     inst_base = arm_instruction_trans[idx](inst, idx);
 
