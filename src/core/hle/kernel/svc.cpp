@@ -118,7 +118,7 @@ enum class SystemInfoType {
      */
     NEW_3DS_INFO = 0x10001,
     /**
-     * Gets citra related information. This parameter is not available on real systems,
+     * Gets lemonade related information. This parameter is not available on real systems,
      * but can be used by homebrew applications to get some emulator info.
      */
     LEMONADE_INFORMATION = 0x20000,
@@ -265,14 +265,14 @@ enum class SystemInfoMemUsageRegion {
 
 /**
  * Accepted by svcGetSystemInfo param with LEMONADE_INFORMATION type. Selects which information
- * to fetch from Citra. Some string params don't fit in 7 bytes, so they are split.
+ * to fetch from Lemonade. Some string params don't fit in 7 bytes, so they are split.
  */
-enum class SystemInfoCitraInformation {
-    IS_LEMONADE = 0,          // Always set the output to 1, signaling the app is running on Citra.
+enum class SystemInfoLemonadeInformation {
+    IS_LEMONADE = 0,          // Always set the output to 1, signaling the app is running on Lemoande.
     HOST_TICK = 1,         // Tick reference from the host in ns, unaffected by lag or cpu speed.
     BUILD_NAME = 10,       // (ie: Nightly, Canary).
     BUILD_VERSION = 11,    // Build version.
-    BUILD_PLATFORM = 12,   // Build platform, see SystemInfoCitraPlatform.
+    BUILD_PLATFORM = 12,   // Build platform, see SystemInfoLemonadePlatform.
     BUILD_DATE_PART1 = 20, // Build date first 7 characters.
     BUILD_DATE_PART2 = 21, // Build date next 7 characters.
     BUILD_DATE_PART3 = 22, // Build date next 7 characters.
@@ -286,7 +286,7 @@ enum class SystemInfoCitraInformation {
 /**
  * Current officially supported platforms.
  */
-enum class SystemInfoCitraPlatform {
+enum class SystemInfoLemonadePlatform {
     PLATFORM_UNKNOWN = 0,
     PLATFORM_WINDOWS = 1,
     PLATFORM_LINUX = 2,
@@ -1750,69 +1750,69 @@ Result SVC::GetSystemInfo(s64* out, u32 type, s32 param) {
         *out = 0;
         return (system.GetNumCores() == 4) ? ResultSuccess : ResultInvalidEnumValue;
     case SystemInfoType::LEMONADE_INFORMATION:
-        switch ((SystemInfoCitraInformation)param) {
-        case SystemInfoCitraInformation::IS_LEMONADE:
+        switch ((SystemInfoLemonadeInformation)param) {
+        case SystemInfoLemonadeInformation::IS_LEMONADE:
             *out = 1;
             break;
-        case SystemInfoCitraInformation::HOST_TICK:
+        case SystemInfoLemonadeInformation::HOST_TICK:
             *out = static_cast<s64>(std::chrono::duration_cast<std::chrono::nanoseconds>(
                                         std::chrono::steady_clock::now().time_since_epoch())
                                         .count());
             break;
-        case SystemInfoCitraInformation::BUILD_NAME:
+        case SystemInfoLemonadeInformation::BUILD_NAME:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_build_name, 0, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_VERSION:
+        case SystemInfoLemonadeInformation::BUILD_VERSION:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_build_version, 0, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_PLATFORM: {
+        case SystemInfoLemonadeInformation::BUILD_PLATFORM: {
 #if defined(_WIN32)
-            *out = static_cast<s64>(SystemInfoCitraPlatform::PLATFORM_WINDOWS);
+            *out = static_cast<s64>(SystemInfoLemonadePlatform::PLATFORM_WINDOWS);
 #elif defined(ANDROID)
-            *out = static_cast<s64>(SystemInfoCitraPlatform::PLATFORM_ANDROID);
+            *out = static_cast<s64>(SystemInfoLemonadePlatform::PLATFORM_ANDROID);
 #elif defined(__linux__)
-            *out = static_cast<s64>(SystemInfoCitraPlatform::PLATFORM_LINUX);
+            *out = static_cast<s64>(SystemInfoLemonadePlatform::PLATFORM_LINUX);
 #elif defined(__APPLE__)
-            *out = static_cast<s64>(SystemInfoCitraPlatform::PLATFORM_APPLE);
+            *out = static_cast<s64>(SystemInfoLemonadePlatform::PLATFORM_APPLE);
 #else
-            *out = static_cast<s64>(SystemInfoCitraPlatform::PLATFORM_UNKNOWN);
+            *out = static_cast<s64>(SystemInfoLemonadePlatform::PLATFORM_UNKNOWN);
 #endif
             break;
         }
-        case SystemInfoCitraInformation::BUILD_DATE_PART1:
+        case SystemInfoLemonadeInformation::BUILD_DATE_PART1:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_build_date,
                            (sizeof(s64) - 1) * 0, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_DATE_PART2:
+        case SystemInfoLemonadeInformation::BUILD_DATE_PART2:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_build_date,
                            (sizeof(s64) - 1) * 1, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_DATE_PART3:
+        case SystemInfoLemonadeInformation::BUILD_DATE_PART3:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_build_date,
                            (sizeof(s64) - 1) * 2, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_DATE_PART4:
+        case SystemInfoLemonadeInformation::BUILD_DATE_PART4:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_build_date,
                            (sizeof(s64) - 1) * 3, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_GIT_BRANCH_PART1:
+        case SystemInfoLemonadeInformation::BUILD_GIT_BRANCH_PART1:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_scm_branch,
                            (sizeof(s64) - 1) * 0, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_GIT_BRANCH_PART2:
+        case SystemInfoLemonadeInformation::BUILD_GIT_BRANCH_PART2:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_scm_branch,
                            (sizeof(s64) - 1) * 1, sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_GIT_DESCRIPTION_PART1:
+        case SystemInfoLemonadeInformation::BUILD_GIT_DESCRIPTION_PART1:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_scm_desc, (sizeof(s64) - 1) * 0,
                            sizeof(s64));
             break;
-        case SystemInfoCitraInformation::BUILD_GIT_DESCRIPTION_PART2:
+        case SystemInfoLemonadeInformation::BUILD_GIT_DESCRIPTION_PART2:
             CopyStringPart(reinterpret_cast<char*>(out), Common::g_scm_desc, (sizeof(s64) - 1) * 1,
                            sizeof(s64));
             break;
         default:
-            LOG_ERROR(Kernel_SVC, "unknown GetSystemInfo citra info param={}", param);
+            LOG_ERROR(Kernel_SVC, "unknown GetSystemInfo lemonade info param={}", param);
             *out = 0;
             break;
         }
